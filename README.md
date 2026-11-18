@@ -1,7 +1,7 @@
 # SafeRoute Twin — 관악구 침수 대피 경로 (3D 디지털 트윈)
 
 ## 실행
-1. zip을 먼저 압축 해제 → `index.html`을 Chrome으로 열기 (인터넷 필요: MapLibre, Esri 위성영상, OpenFreeMap 건물, AWS 지형 타일 — 모두 무료·키 불필요)
+1. zip을 먼저 압축 해제 → `index.html`을 Chrome으로 열기 (인터넷 필요: MapLibre, Esri 위성영상, OpenFreeMap 건물, AWS 지형 타일 )
 
 ## 사용법
 1. 상단에서 모드 선택 (실시간 재난 대응 / 가상 재난 시뮬레이션)
