@@ -59,7 +59,7 @@ aside{bottom:36px}
 .pin i{width:2px;height:28px;background:var(--c)}.pin b{width:12px;height:12px;border-radius:50%;background:var(--c);border:2px solid #fff;margin-top:-2px}
 .sb{width:26px;height:26px;border-radius:50%;border:2px solid #fff;color:#fff;font:700 13px sans-serif;display:grid;place-items:center;cursor:pointer;box-shadow:0 0 6px #000a}
 .maplibregl-ctrl-attrib{font-size:10px}
-.wx{font-size:12px;line-height:1.7;margin-top:6px}.wx .src{color:var(--mu);font-size:11px}#keybox{margin-top:8px}#keybox input{flex:1;min-width:0;background:#0a1620;border:1px solid var(--line);border-radius:8px;color:var(--tx);padding:6px 8px;font-size:12px}#keybox button{flex:none}</style>
+.wx{font-size:12px;line-height:1.7;margin-top:6px}.wx .src{color:var(--mu);font-size:11px}#keybox{margin-top:8px}#keybox input{flex:1;min-width:0;background:#0a1620;border:1px solid var(--line);border-radius:8px;color:var(--tx);padding:6px 8px;font-size:12px}#keybox button{flex:none}.verdict{font-size:12px;margin-top:6px;line-height:1.5}.okc{border-color:#2bd66b;background:#0e2a1bee}.okc b{color:#5bffa0}.okc p{font-size:12px;margin:4px 0 0}</style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 </head><body>
@@ -80,10 +80,10 @@ aside{bottom:36px}
       <label>10분 강우량 <b id="o10">0</b>mm<input id="s10" type="range" min="0" max="30" step="0.5" value="0"></label>
       <label>1시간 누적 <b id="o1h">0</b>mm<input id="s1h" type="range" min="0" max="130" step="1" value="0"></label>
       <label>3시간 누적 <b id="o3h">0</b>mm<input id="s3h" type="range" min="0" max="250" step="1" value="0"></label>
-      <button id="preset" class="ghost">📌 2022.8.8 관악구 호우 재현</button>
+      <div id="preset" class="row sm"><button class="ghost" data-v="0,0,0">☀ 비 없음</button><button class="ghost" data-v="2,6,10">🌦 약한 비</button><button class="ghost" data-v="8,40,60">🌧 강한 비</button><button class="ghost" data-v="20.5,116,175">⛈ 2022.8.8 호우</button></div>
     </div>
   </section>
-  <section class="card"><h3>침수 위험도</h3><div class="gauge"><div id="gbar"></div></div><div class="gl"><span id="score">0</span>점 · <span id="alert">특보 없음</span></div></section>
+  <section class="card"><h3>🤖 AI 침수 예측</h3><div class="gauge"><div id="gbar"></div></div><div class="gl"><span id="score">0</span>점 · <span id="alert">특보 없음</span></div><div id="verdict" class="verdict"></div><div id="mi" class="hint"></div></section>
   <section class="card">
     <h3>① 내 위치 정하기</h3>
     <div class="row"><button id="bGps">📍 현재 위치</button></div>
@@ -92,14 +92,15 @@ aside{bottom:36px}
     <h3>② 대피 경로 찾기</h3><button id="bGo" class="go">대피 경로 안내 시작</button>
   </section>
   <section class="card tog">
-    <label><input type="checkbox" id="t22" checked><i class="d1"></i>2022 실제 침수흔적</label>
-    <label><input type="checkbox" id="t100" checked><i class="d2"></i>침수 예측 구역(100년 빈도)</label>
+    <label><input type="checkbox" id="t22"><i class="d3" style="background:#ff3d8b"></i>2022 실제 침수흔적(참고, 윤곽)</label>
+    <label><input type="checkbox" id="t100" checked><i class="d2"></i>AI 예측 침수 구역 (파랑=2022 학습, 청록=100년 빈도 확장)</label>
     <label><input type="checkbox" id="tnet"><i class="d3"></i>도보망 (회색 안전·노랑 주의·빨강 침수)</label>
   </section>
 </aside>
 <aside id="right">
   <section class="card alertc hid" id="alertCard"><b id="alT"></b><p id="alP"></p></section>
-  <section class="card" id="intro"><h3>사용 방법</h3><p class="hint">① 위치 정하기 → ② 대피 경로 안내 시작.<br>일반 최단경로(빨강)와 침수를 피한 안전경로(민트)를 비교하고, 구간별 안내의 '지도에서 위치 확인'을 누르면 해당 구간으로 이동합니다.</p></section>
+  <section class="card okc hid" id="noFlood"><b>✅ 침수 예측 없음</b><p id="nfP"></p></section>
+  <section class="card" id="intro"><h3>사용 방법</h3><p class="hint">① 위치 정하기 → ② 대피 경로 안내 시작.<br>강우량(10분·1시간·3시간)으로 침수를 예측하고, 침수가 예측될 때만 대피 경로를 안내합니다. 일반 최단경로(빨강)와 침수를 피한 안전경로(민트)를 비교하고, 구간별 안내의 '지도에서 위치 확인'을 누르면 해당 구간으로 이동합니다.</p></section>
   <div id="result" class="hid">
     <section class="card guide"><h3>🧭 실시간 도보 대피 안내 (구간별)</h3><ol id="steps"></ol></section>
     <div class="cmp">
